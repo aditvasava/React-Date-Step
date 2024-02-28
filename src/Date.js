@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./date.css";
 
 function DateCal() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
   const [slider, setSlider] = useState(1);
+  const inputref = useRef();
   const day = new Date().getDay();
   const date = new Date().getDate();
   const month = new Date().getMonth();
@@ -128,6 +129,14 @@ function DateCal() {
     backgroundColor: "white",
     border: "1px dotted black",
   };
+
+  const handlereset = () => {
+    getMs(0);
+    setCount(0);
+    setStep(1);
+    setSlider(1);
+    inputref.current.value = 0;
+  };
   return (
     <div style={mystyle}>
       {/* <div style={container}>
@@ -167,6 +176,7 @@ function DateCal() {
           style={inputstyle}
           onChange={handleInput}
           placeholder={count}
+          ref={inputref}
         />
         <button style={buttonstyle} onClick={handlePlusCount}>
           +
@@ -176,7 +186,7 @@ function DateCal() {
       {!count && count !== 0 && <div>Enter Text in the input box</div>}
 
       {count === 0 && (
-        <div>
+        <div style={{ marginBottom: "20px" }}>
           Today is{" "}
           <b>
             {" "}
@@ -186,7 +196,7 @@ function DateCal() {
       )}
 
       {count > 0 && (
-        <div>
+        <div style={{ marginBottom: "20px" }}>
           {count} {count == 1 ? "day" : "days"} from today is{" "}
           <b>
             {" "}
@@ -196,7 +206,7 @@ function DateCal() {
       )}
 
       {count < 0 && (
-        <div>
+        <div style={{ marginBottom: "20px" }}>
           {-count} {count == -1 ? "day" : "days"} ago was{" "}
           <b>
             {" "}
@@ -204,6 +214,13 @@ function DateCal() {
           </b>
         </div>
       )}
+
+      <button
+        style={{ backgroundColor: "white", border: "0.1px solid black" }}
+        onClick={handlereset}
+      >
+        Reset
+      </button>
     </div>
   );
 }
