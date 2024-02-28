@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import "./date.css";
 
 function DateCal() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
+  const [slider, setSlider] = useState(1);
   const day = new Date().getDay();
   const date = new Date().getDate();
   const month = new Date().getMonth();
@@ -15,6 +17,11 @@ function DateCal() {
     else if (d === 4) return "Thursday";
     else if (d === 5) return "Friday";
     else return "Saturday";
+  };
+
+  const handleSlider = (e) => {
+    setSlider(e.target.value);
+    setStep(Number(e.target.value));
   };
 
   const getmonth = (m) => {
@@ -59,9 +66,10 @@ function DateCal() {
     fontSize: "20px",
     border: "none",
     fontWeight: "300",
+    backgroundColor: "whitesmoke",
   };
   const container = {
-    margin: "auto 400px",
+    margin: "auto 350px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -78,6 +86,16 @@ function DateCal() {
     setStep((prev) => {
       return prev - 1;
     });
+  };
+
+  const handleInput = (e) => {
+    if (!e.target.value || e.target.value === 0) {
+      getMs(0);
+      setCount(0);
+    } else {
+      getMs(Number(e.target.value));
+      setCount(Number(e.target.value));
+    }
   };
 
   const handlePlusCount = () => {
@@ -106,9 +124,13 @@ function DateCal() {
       };
     });
   };
+  const inputstyle = {
+    backgroundColor: "white",
+    border: "1px dotted black",
+  };
   return (
     <div style={mystyle}>
-      <div style={container}>
+      {/* <div style={container}>
         <button style={buttonstyle} onClick={handleMinus}>
           -
         </button>
@@ -116,17 +138,42 @@ function DateCal() {
         <button style={buttonstyle} onClick={handlePlus}>
           +
         </button>
+      </div> */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <input
+          type="range"
+          min={1}
+          max={10}
+          value={slider}
+          onChange={handleSlider}
+          style={{ marginRight: "20px" }}
+        />
+        {slider}
       </div>
 
       <div style={container}>
         <button style={buttonstyle} onClick={handleMinusCount}>
           -
         </button>
-        Count: {count}
+        <input
+          type="number"
+          style={inputstyle}
+          onChange={handleInput}
+          placeholder={count}
+        />
         <button style={buttonstyle} onClick={handlePlusCount}>
           +
         </button>
       </div>
+
+      {!count && count !== 0 && <div>Enter Text in the input box</div>}
 
       {count === 0 && (
         <div>
@@ -147,6 +194,7 @@ function DateCal() {
           </b>
         </div>
       )}
+
       {count < 0 && (
         <div>
           {-count} {count == -1 ? "day" : "days"} ago was{" "}
